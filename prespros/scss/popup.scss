@@ -1,17 +1,28 @@
 @font-face {
     font-family: 'Inconsolata';
-    src: url('../assets/fonts/Inconsolata.eot');
-    src: url('../assets/fonts/Inconsolata.eot') format('embedded-opentype'),
-         url('../assets/fonts/Inconsolata.woff2') format('woff2'),
-         url('../assets/fonts/Inconsolata.woff') format('woff'),
-         url('../assets/fonts/Inconsolata.ttf') format('truetype'),
-         url('../assets/fonts/Inconsolata.svg#Inconsolata') format('svg');
+    src: url('/assets/fonts/Inconsolata.eot');
+    src: url('/assets/fonts/Inconsolata.eot') format('embedded-opentype'),
+         url('/assets/fonts/Inconsolata.woff2') format('woff2'),
+         url('/assets/fonts/Inconsolata.woff') format('woff'),
+         url('/assets/fonts/Inconsolata.ttf') format('truetype'),
+         url('/assets/fonts/Inconsolata.svg#Inconsolata') format('svg');
 }
-// default font face
+
 $font: 'Inconsolata';
-body, html {
+$primary-background: rgb(255, 255, 255);
+
+// default fonts
+h1, h2, h3, h4, h5, h6, label, span, input {
     font-family: $font;
-    width: 600px;
+}
+
+body, html {
+    background: $primary-background;
+    width: 400px;
     height: 600px;
     overflow: hidden;
+}
+
+.title {
+    text-align: center;
 }
