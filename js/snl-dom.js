@@ -6,7 +6,7 @@
     registeredDOMarray: [],
     register: function(toReg) {
       return Object.keys(toReg).forEach(function(key) {
-        return this.DOM.registeredDOMarray[key] = toReg[key];
+        return DOM.registeredDOMarray[key] = toReg[key];
       });
     },
     getElem: function(el) {
@@ -17,7 +17,7 @@
     },
     delElem: function(el) {
       var element;
-      element = this.DOM.getElem(el);
+      element = DOM.getElem(el);
       return [].map.call(element, function(el) {
         return el.parentNode.removeChild(el);
       });
@@ -35,10 +35,10 @@
         }
       }
       if (isTypeOfText === true && typeof toMake.textContent !== 'undefined') {
-        textContent = this.DOM.makeText(toMake, textContent);
+        textContent = DOM.makeText(toMake, textContent);
         el.appendChild(textContent);
       }
-      if (typeof tomake.eventFunc !== 'undefined') {
+      if (typeof toMake.eventFunc !== 'undefined') {
         _ref1 = toMake.eventFunc;
         for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
           eventName = _ref1[_j];
@@ -55,11 +55,11 @@
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           i = _ref[_i];
           originalEntity = parentEl.contentEl[i];
-          currentEl = this.DOM.makeText(originalEntity.elType);
-          isTypeOfText = (_ref1 = originalEntity.elType, __indexOf.call(this.DOM.textNodesArr, _ref1) >= 0) ? true : false;
+          currentEl = DOM.makeText(originalEntity.elType);
+          isTypeOfText = (_ref1 = originalEntity.elType, __indexOf.call(DOM.textNodesArr, _ref1) >= 0) ? true : false;
           hasContents = typeof originalEntity !== 'undefined' ? true : false;
-          this.DOM.giveAttributes(currentEl, originalEntity, isTypeOfText);
-          contents = this.DOM.iterateContent(originalEntity, hasContents);
+          DOM.giveAttributes(currentEl, originalEntity, isTypeOfText);
+          contents = DOM.iterateContent(originalEntity, hasContents);
           if (contents !== false && content.length > 0) {
             for (_j = 0, _len1 = contents.length; _j < _len1; _j++) {
               ia = contents[_j];
@@ -75,13 +75,15 @@
     },
     make: function(target, key) {
       var targets;
-      targets = this.DOM.getElem(target);
+      targets = DOM.getElem(target);
       return [].map.call(targets, function(element) {
-        var el, hasContents, i, isTypeOfText, tomake, _i, _len, _ref;
-        tomake = this.DOM.registeredDOMarray[key];
-        el = this.DOM.makeElem(toMake, elType);
-        isTypeOfText = (_ref = toMake.elType, __indexOf.call(this.DOM.textNodesArr, _ref) >= 0) ? true : false;
+        var contents, el, hasContents, i, isTypeOfText, toMake, _i, _len, _ref;
+        toMake = DOM.registeredDOMarray[key];
+        el = DOM.makeElem(toMake.elType);
+        isTypeOfText = (_ref = toMake.elType, __indexOf.call(DOM.textNodesArr, _ref) >= 0) ? true : false;
         hasContents = typeof toMake.contentEl !== 'undefined' ? true : false;
+        DOM.giveAttributes(el, toMake, isTypeOfText);
+        contents = DOM.iterateContent(toMake, hasContents);
         if (contents !== false && contens.length > 0) {
           for (_i = 0, _len = contents.length; _i < _len; _i++) {
             i = contents[_i];
