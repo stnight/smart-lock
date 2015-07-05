@@ -3,10 +3,52 @@
     <head>
         <meta charset="utf-8">
         <title>SMART LOCK</title>
-        <link rel="stylesheet" href="css/popup.css" media="screen" title="no title" charset="utf-8">
-        <script src="js/snl-dom.js" charset="utf-8"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="css/popup.css">
+        <script src="js/storage.js"></script>
+        <script src="js/snl-dom.js"></script>
     </head>
     <body>
-        <h2 class="title">SMART LOCK</h2>
+        <div class="title-wrapper">
+            <h1 class="title">SMART LOCK</h1>
+        </div>
+        <div class="wrapper">
+            <!-- if password isn't set yet -->
+            <h2 class="sub-title">GETTING STARTED</h2>
+            <p>
+                To use <span class="tomato">SMART LOCK</span> you have to set up your password and hint - so you could recall your password in case you forgot it.
+            </p>
+            <form action="" id="gettingStarted">
+                <ul class="form-heiarchy">
+                    <li>
+                        <label for=""><strong>YOUR PASSWORD</strong></label>
+                        <input type="password" placeholder="Something here..." required/>
+                    </li>
+                    <li>
+                        <label for=""><strong>RE-TYPE YOUR PASSWORD</strong></label>
+                        <input type="password" placeholder="Same as above...." required/>
+                    </li>
+                    <li>
+                        <label for=""><strong>PASSWORD HINT</strong></label>
+                        <input type="text" placeholder="Anything that makes you remember your password..." required/>
+                    </li>
+                    <li>
+                        <button class="primary-btn">SAVE YOUR PASSWORD</button>
+                    </li>
+                </ul>
+            </form>
+            <!-- end of getting started -->
+            <!-- if all are settled up -->
+            <h2 class="sub-title">LOCK YOUR TABS</h2>
+            <p>
+                To lock your tabs, just press:
+            </p>
+            <br>
+            <div class="instructions">
+                <span class="key">CTRL</span> <span>+</span> <span class="key">Q</span>
+                <span data-on="On" data-off="Off"></span>
+            </div>
+            <!-- end of settled up -->
+        </div>
     </body>
 </html>

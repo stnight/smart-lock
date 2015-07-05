@@ -9,11 +9,15 @@
 }
 
 $font: 'Inconsolata';
-$primary-background: rgb(255, 255, 255);
+$primary-background: #EFEFEF;
+$primary-color: tomato;
 
 // default fonts
-h1, h2, h3, h4, h5, h6, label, span, input {
+h1, h2, h3, h4, h5, h6, label, span, input, p {
     font-family: $font;
+}
+p {
+    text-align: justify;
 }
 
 body, html {
@@ -21,8 +25,72 @@ body, html {
     width: 400px;
     height: 600px;
     overflow: hidden;
+    padding: 0;
+    margin: 0;
 }
 
+ul {
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+}
+
+input,
+select {
+    display: block;
+    width: 97%;
+    padding: 10px 5px 10px 5px;
+    border-radius: 5px;
+    border: 1px solid tomato;
+}
+
+form {
+    padding-top: 10px;
+}
+
+.title-wrapper,
+.wrapper {
+    padding: 5px;
+    border-top: 3px solid tomato;
+}
 .title {
+    color: $primary-color;
+}
+
+.title,
+.sub-title {
     text-align: center;
+}
+
+.tomato {
+    color: tomato;
+}
+
+ul.form-heiarchy {
+    li {
+        padding-bottom: 10px; 
+    }
+    li label {
+        padding-top: 3px;
+        padding-bottom: 3px;
+    }
+}
+
+button.primary-btn {
+    cursor: pointer;
+    background: tomato;
+    border: 1px solid tomato;
+    border-radius: 5px;
+    padding: 10px 20px 10px 20px;
+}
+
+.instructions {
+    color: tomato;
+    font-size: 30px;
+    text-align: center;
+    .key {
+        padding: 10px 20px 10px 20px;
+        border: 2px solid tomato;
+        border-radius: 10px;
+    }
 }
