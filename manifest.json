@@ -3,6 +3,11 @@
     "name": "Snart Lock",
     "description": "A Google Chrome Extension to lock your browser's tab. A very secured persistent plugin.",
     "version": "1.0",
+    "icons": {
+        "16": "assets/images/16_icon.png",
+        "48": "assets/images/48_icon.png",
+        "128": "assets/images/128_icon.png"
+        },
     "browser_action": {
         "default_icon": "assets/images/icon.png",
         "default_popup": "popup.html"
