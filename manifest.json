@@ -12,6 +12,7 @@
         "default_icon": "assets/images/icon.png",
         "default_popup": "popup.html"
     },
+    "options": "options.html",
     "permissions": [
         "activeTab",
         "https://*/*",
