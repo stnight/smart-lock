@@ -12,10 +12,11 @@
         "default_icon": "assets/images/icon.png",
         "default_popup": "popup.html"
     },
-    "options": "options.html",
+    "options_page": "options.html",
     "permissions": [
         "activeTab",
         "https://*/*",
-        "http://*/*"
+        "http://*/*",
+        "storage"
     ]
 }
