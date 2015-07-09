@@ -1,7 +1,0 @@
-{
-"version": 3,
-"mappings": "AAAA,UAQC;EAPG,WAAW,EAAE,aAAa;EAC1B,GAAG,EAAE,sCAAsC;EAC3C,GAAG,EAAE,iTAAkE",
-"sources": ["../prespros/scss/popup.scss"],
-"names": [],
-"file": "popup.css"
-}

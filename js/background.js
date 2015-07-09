@@ -1,21 +1,35 @@
-var seeAll;
+var chRt, chTb, isLocked, seeAll;
+
+chTb = chrome.tabs;
+
+chRt = chrome.runtime;
+
+isLocked = true;
 
 seeAll = function() {
-  return chrome.tabs.query({}, function(tabs) {
+  return chTb.query({}, function(tabs) {
     tabs.forEach(function(tab) {
-      chrome.tabs.connect(tab.id);
-      return chrome.tabs.sendMessage(tab.id, {
-        text: 'Hello from backgroundscript'
+      chTb.connect(tab.id);
+      return chTb.sendMessage(tab.id, {
+        text: 'Going to lock'
       });
     });
   });
 };
 
-chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-  if (request.greetings === 'hello, please connect to me') {
+chRt.onMessage.addListener(function(request, sender, sendResponse) {
+  if (request.greetings === 'lockBrowser') {
     seeAll();
     sendResponse({
       reply: 'ok wait'
+    });
+  }
+});
+
+chRt.onMessage.addListener(function(request, sender, sendResponse) {
+  if (request.cmd === 'check-lock') {
+    return sendResponse({
+      reply: isLocked
     });
   }
 });

@@ -1,19 +1,42 @@
-var body;
+var LockApp;
 
-body = document.querySelector('body');
+LockApp = {
+  chRt: chrome.runtime,
+  init: function() {
+    this.chRt.sendMessage({
+      cmd: 'check-lock'
+    }, function(response) {
+      if (response.reply === true) {
+        return LockApp.lockTab();
+      }
+    });
+  },
+  lockTab: function() {
+    var body, wrapper;
+    body = document.querySelector('body');
+    wrapper = document.createElement('div');
+    wrapper.className = 'sl-wrapper';
+    body.classList.add('rel');
+    return body.appendChild(wrapper);
+  }
+};
 
-body.addEventListener('click', function(event) {
-  return chrome.runtime.sendMessage({
-    greetings: 'hello, please connect to me'
-  }, function(response) {
-    return console.log(response.reply);
-  });
-});
+LockApp.init();
 
-chrome.runtime.onConnect.addListener(function(e) {
+LockApp.chRt.onConnect.addListener(function(e) {
   return console.log('someone is connected');
 });
 
-chrome.runtime.onMessage.addListener(function(message, sender, response) {
+LockApp.chRt.onMessage.addListener(function(message, sender, response) {
   return console.log(message.text);
 });
+
+document.addEventListener('keyup', function(e) {
+  if (e.ctrlKey && e.keyCode === 81) {
+    return LockApp.chRt.sendMessage({
+      greetings: 'lockBrowser'
+    }, function(response) {
+      return console.log(response.reply);
+    });
+  }
+}, false);

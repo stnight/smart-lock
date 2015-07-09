@@ -1,7 +1,0 @@
-{
-"version": 3,
-"mappings": "AAEA,QAAS;EACL,UAAU,EAHT,OAAO;EAIR,OAAO,EAAE,KAAK",
-"sources": ["../prespros/scss/lock.scss"],
-"names": [],
-"file": "lock.css"
-}
