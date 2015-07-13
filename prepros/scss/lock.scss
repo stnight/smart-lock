@@ -1,0 +1,44 @@
+#hintLink {
+    color: tomato;
+    text-decoration: none;
+}
+
+dialog {
+    top: 50px;
+    padding: 25px 25px;
+    text-align: left;
+    border: 0;
+    border-top: 10px solid tomato;
+    position: fixed;
+    width: 600px;
+}
+
+dialog::backdrop {
+    background: rgba(84, 84, 84, 0.97);
+}
+
+#slForm {
+    padding: 25px 0 25px 0;
+    input {
+        display: block
+    }
+    button {
+        background: tomato;
+        border: 1px solid tomato;
+        padding: 10px 20px 10px 20px;
+        float: right;
+        margin-top: -38px;
+        font-weight: bold;
+    }
+}
+
+.sl-password {
+    padding: 10px;
+    box-sizing : border-box;
+    width: 100%;
+    border: 1px solid tomato;
+}
+
+.sl-password:focus {
+    outline: none;
+}

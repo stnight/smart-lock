@@ -36,7 +36,8 @@ App = {
   savePassword: function(password, hint) {
     this.storage.set({
       password: password,
-      hint: hint
+      hint: hint,
+      isLocked: false
     }, function() {
       App.noSettings.classList.toggle('hidden');
       App.withSettings.classList.toggle('hidden');

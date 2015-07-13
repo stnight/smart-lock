@@ -1,6 +1,6 @@
 {
     "manifest_version": 2,
-    "name": "Snart Lock",
+    "name": "Smart Lock",
     "description": "A Google Chrome Extension to lock your browser's tab. A very secured persistent plugin.",
     "version": "1.0",
     "icons": {
