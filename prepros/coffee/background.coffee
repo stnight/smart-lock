@@ -5,23 +5,19 @@ password = null;
 isLocked = chSt.get null, (settings) ->
     return settings.isLocked
 
-seeAll = () ->
-    chTb.query {}, (tabs) ->
-        tabs.forEach (tab) ->
-            chTb.connect tab.id
-            chTb.sendMessage tab.id, {text: 'Going to lock'}
-        return
-
 # this function dispatch a global trigger
-tabsCommander = (cmd) ->
-    commandType = null
+tabsCommander = (cmd, txt = null) ->
+    reply = {}
     switch cmd
         when 'lockEverything'
-            commandType = 'lock-everything'
+            reply.cmd = 'lock-everything'
+        when 'unlockAttempt'
+            reply.cmd = 'unlock-attempt'
+            reply.result = txt
     chTb.query {}, (tabs) ->
         tabs.forEach (tab) ->
             chTb.connect tab.id
-            chTb.sendMessage tab.id, {cmd: commandType}
+            chTb.sendMessage tab.id, reply
         return
     
 chRt.onMessage.addListener (request, sender, sendResponse) ->
@@ -42,6 +38,16 @@ chRt.onMessage.addListener (request, sender, sendResponse) ->
                     tabsCommander 'lockEverything'
                     return
             sendResponse {reply:'done with the commands'}
+        when 'validate-password'
+            chSt.get null, (settings) ->
+                if request.password is settings.password
+                    tabsCommander 'unlockAttempt', true
+                    isLocked = false;
+                    chSt.set {isLocked: false}, () ->
+                else
+                    tabsCommander 'unlockAttempt', false
+                return
+            return
 
 chrome.storage.onChanged.addListener (changes, areaName) ->
     console.log changes

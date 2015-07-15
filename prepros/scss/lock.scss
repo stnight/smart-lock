@@ -3,6 +3,10 @@
     text-decoration: none;
 }
 
+#hintText {
+    font-style: italic;
+}
+
 dialog {
     top: 50px;
     padding: 25px 25px;
@@ -17,6 +21,11 @@ dialog::backdrop {
     background: rgba(84, 84, 84, 0.97);
 }
 
+.error {
+    color: #FF2E2E;
+    font-weight: bold;
+}
+
 #slForm {
     padding: 25px 0 25px 0;
     input {
@@ -29,6 +38,9 @@ dialog::backdrop {
         float: right;
         margin-top: -38px;
         font-weight: bold;
+    }
+    label.error {
+        padding-bottom: 25px;
     }
 }
 

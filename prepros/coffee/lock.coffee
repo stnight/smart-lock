@@ -24,6 +24,8 @@ LockApp =
         passwordInput = document.createElement 'input'
         formButton = document.createElement 'button'
         br = document.createElement 'br'
+        errorLabel = document.createElement 'label'
+        errorLabel.classList.add 'error'
         form.setAttribute 'id', 'slForm'
         passwordInput.setAttribute 'type', 'password'
         passwordInput.setAttribute 'placeholder', 'Your Password'
@@ -42,6 +44,7 @@ LockApp =
         hintLabel.appendChild hintLink
         hintLabel.appendChild hintText
         # append the elements on form
+        form.appendChild errorLabel
         form.appendChild passwordInput
         form.appendChild formButton
         form.appendChild br
@@ -59,12 +62,24 @@ LockApp =
         hintText = document.querySelector 'span#hintText'
         form.addEventListener 'submit', (event) ->
             event.preventDefault()
-            console.log password.value
+            LockApp.chRt.sendMessage {cmd: 'validate-password', password: password.value}, (response) ->
+                console.log response
+                LockApp.checkAuth response.reply
             return
         hintLink.addEventListener 'click', (event) ->
             event.preventDefault()
             hintText.textContent = ' '+LockApp.hint
+            return
         return
+    checkAuth: (result) ->
+        errorLabel = document.querySelector 'label.error'
+        if result is false
+            errorLabel.textContent = 'Your Password Is Incorrect'
+            return
+    unlockTab: () ->
+        dialog = document.querySelector 'dialog.sl-dialog'
+        dialog.close()
+        dialog.remove()
 
 LockApp.init()
 
@@ -83,3 +98,8 @@ LockApp.chRt.onMessage.addListener (message, sender, response) ->
     if message.cmd is 'lock-everything' and LockApp.isLocked is false
         LockApp.isLocked = true
         LockApp.lockTab()
+    if message.cmd is 'unlock-attempt'
+        if message.result is false
+            LockApp.checkAuth message.result
+        else
+            LockApp.unlockTab()

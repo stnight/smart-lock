@@ -19,7 +19,7 @@ LockApp = {
     });
   },
   lockTab: function() {
-    var body, br, dialog, dialogTitle, form, formButton, hintLabel, hintLink, hintText, passwordInput;
+    var body, br, dialog, dialogTitle, errorLabel, form, formButton, hintLabel, hintLink, hintText, passwordInput;
     body = document.querySelector('body');
     dialog = document.createElement('dialog');
     dialog.classList.add('sl-dialog');
@@ -29,6 +29,8 @@ LockApp = {
     passwordInput = document.createElement('input');
     formButton = document.createElement('button');
     br = document.createElement('br');
+    errorLabel = document.createElement('label');
+    errorLabel.classList.add('error');
     form.setAttribute('id', 'slForm');
     passwordInput.setAttribute('type', 'password');
     passwordInput.setAttribute('placeholder', 'Your Password');
@@ -45,6 +47,7 @@ LockApp = {
     hintLabel.setAttribute('id', 'hintLabel');
     hintLabel.appendChild(hintLink);
     hintLabel.appendChild(hintText);
+    form.appendChild(errorLabel);
     form.appendChild(passwordInput);
     form.appendChild(formButton);
     form.appendChild(br);
@@ -63,12 +66,31 @@ LockApp = {
     hintText = document.querySelector('span#hintText');
     form.addEventListener('submit', function(event) {
       event.preventDefault();
-      console.log(password.value);
+      LockApp.chRt.sendMessage({
+        cmd: 'validate-password',
+        password: password.value
+      }, function(response) {
+        console.log(response);
+        return LockApp.checkAuth(response.reply);
+      });
     });
     hintLink.addEventListener('click', function(event) {
       event.preventDefault();
-      return hintText.textContent = ' ' + LockApp.hint;
+      hintText.textContent = ' ' + LockApp.hint;
     });
+  },
+  checkAuth: function(result) {
+    var errorLabel;
+    errorLabel = document.querySelector('label.error');
+    if (result === false) {
+      errorLabel.textContent = 'Your Password Is Incorrect';
+    }
+  },
+  unlockTab: function() {
+    var dialog;
+    dialog = document.querySelector('dialog.sl-dialog');
+    dialog.close();
+    return dialog.remove();
   }
 };
 
@@ -91,6 +113,13 @@ document.addEventListener('keyup', function(e) {
 LockApp.chRt.onMessage.addListener(function(message, sender, response) {
   if (message.cmd === 'lock-everything' && LockApp.isLocked === false) {
     LockApp.isLocked = true;
-    return LockApp.lockTab();
+    LockApp.lockTab();
+  }
+  if (message.cmd === 'unlock-attempt') {
+    if (message.result === false) {
+      return LockApp.checkAuth(message.result);
+    } else {
+      return LockApp.unlockTab();
+    }
   }
 });
