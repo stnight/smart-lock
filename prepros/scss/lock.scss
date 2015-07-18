@@ -27,6 +27,7 @@ dialog::backdrop {
 }
 
 #slForm {
+    height: auto;
     padding: 25px 0 25px 0;
     input {
         display: block
@@ -35,22 +36,37 @@ dialog::backdrop {
         background: tomato;
         border: 1px solid tomato;
         padding: 10px 20px 10px 20px;
-        float: right;
-        margin-top: -38px;
         font-weight: bold;
-    }
-    label.error {
-        padding-bottom: 25px;
     }
 }
 
 .sl-password {
     padding: 10px;
     box-sizing : border-box;
-    width: 100%;
     border: 1px solid tomato;
 }
 
 .sl-password:focus {
     outline: none;
+}
+
+.row {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.column {
+    float: left
+}
+
+.clear {
+    clear: both;
+}
+
+.one-third {
+    width: 33.3%
+}
+
+.two-third {
+    width: 66.6%
 }

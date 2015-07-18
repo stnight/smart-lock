@@ -12,7 +12,7 @@ LockApp =
                 LockApp.isLocked = true
                 LockApp.lockTab()
         return
-    lockTab: () ->
+    lockTab: (systemMessage = null) ->
         body = document.querySelector 'body'
         dialog = document.createElement 'dialog'
         dialog.classList.add 'sl-dialog'
@@ -23,15 +23,25 @@ LockApp =
         form = document.createElement 'form'
         passwordInput = document.createElement 'input'
         formButton = document.createElement 'button'
-        br = document.createElement 'br'
         errorLabel = document.createElement 'label'
-        errorLabel.classList.add 'error'
+        row_1 = document.createElement 'div'
+        row_2 = document.createElement 'div'
+        row_1.classList.add 'row'
+        row_2.classList.add 'row'
+        clearFix = document.createElement 'div'
+        clearFix.classList.add 'clear'
+        errorLabel.classList.add 'error', 'row'
         form.setAttribute 'id', 'slForm'
         passwordInput.setAttribute 'type', 'password'
         passwordInput.setAttribute 'placeholder', 'Your Password'
         passwordInput.setAttribute 'required', 'required'
-        passwordInput.classList.add 'sl-password'
+        passwordInput.classList.add 'sl-password', 'column', 'two-third'
         formButton.textContent = 'UNLOCK'
+        formButton.classList.add 'column', 'one-third'
+        # for row and columns
+        row_1.appendChild passwordInput
+        row_1.appendChild formButton
+        row_1.appendChild clearFix
         # for password hinting
         hintLabel = document.createElement 'label'
         hintLink = document.createElement 'a'
@@ -43,12 +53,11 @@ LockApp =
         hintLabel.setAttribute 'id', 'hintLabel'
         hintLabel.appendChild hintLink
         hintLabel.appendChild hintText
+        row_2.appendChild hintLabel
         # append the elements on form
+        form.appendChild row_1
         form.appendChild errorLabel
-        form.appendChild passwordInput
-        form.appendChild formButton
-        form.appendChild br
-        form.appendChild hintLabel
+        form.appendChild row_2
         # append the dialog on the body
         dialog.appendChild dialogTitle
         dialog.appendChild form
