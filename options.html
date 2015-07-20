@@ -4,12 +4,66 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Smart Lock Options</title>
-    <link rel="stylesheet" href="">
+    <link rel="stylesheet" href="css/options.css">
 </head>
 <body>
-    <h1>Hello World</h1>
-    <p>
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Delectus voluptatem, modi quas eaque aspernatur minima accusantium voluptates dolor unde facilis nam, commodi reprehenderit natus ipsum neque. Veritatis ipsum hic dignissimos.
-    </p>
+    <h1 class="title">SETTINGS</h1>
+    <hr>
+    <div class="options-content">
+        <!-- navigation -->
+        <div class="sidebar column twenty">
+            <ul class="navigation">
+                <li class="active" id="nav_basic"><a href="#">Basic</a></li>
+                <li id="nav_forgot"><a href="#">Forgot Password</a></li>
+            </ul>
+        </div>
+        <!-- content -->
+        <div class="content column eighty">
+            <!-- for basic settings -->
+            <div id="basic" class="settings-content">
+                <div class="row">
+                    <div class="column twenty settings-label">
+                        Message:
+                    </div>
+                    <input type="text" id="messageSetting" class="column eighty" placeholder="Your Message When Your Browser Is Locked">
+                    <div class="clear"></div>
+                </div>
+                <div class="row">
+                    <div class="column twenty settings-label">
+                        Persistent:
+                    </div>
+                    <div class="column eighty">
+                        <div class="onoffswitch">
+                            <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="persistentSetting" value="true">
+                            <label class="onoffswitch-label" for="persistentSetting">
+                                <span class="onoffswitch-inner"></span>
+                                <span class="onoffswitch-switch"></span>
+                            </label>
+                        </div>
+                        <br>
+                        <label for="" class="comment">If  turned <strong>ON</strong>, the Lock cannot be deleted by any means, including the modification from Chrome's console.</label>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+                <div class="row">
+                    <div class="column twenty">
+                        <button id="saveButton">SAVE</button>
+                    </div>
+                    <div class="column eighty settings-label">
+                        <label for="" id="updateMessage" class="mainLabel"></label>
+                    </div>
+                </div>
+            </div>
+            <!-- for forgot password -->
+            <div id="forgot" class="settings-content hide">
+                <h2 class="title">RECOVER PASSWORD</h2>
+                <p>
+                    This section will help you to recover your lost password.
+                </p>
+            </div>
+        </div>
+        <div class="clear"></div>
+    </div>
+    <script type="text/javascript" src="js/options.js"></script>
 </body>
 </html>

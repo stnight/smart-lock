@@ -1,4 +1,30 @@
-var LockApp;
+var LockApp, Wtchr;
+
+Wtchr = {
+  chSt: chrome.storage.sync,
+  init: function() {
+    return this.chSt.get(null, function(settings) {
+      if (settings.persistent === 'on') {
+        return Wtchr.watch();
+      }
+    });
+  },
+  watch: function() {
+    var config, dialog, observer;
+    dialog = document.querySelector('.sl-dialog');
+    observer = new MutationObserver(function(mutations) {
+      mutations.forEach(function(mutation) {
+        return console.log(mutation);
+      });
+    });
+    config = {
+      attributes: true,
+      childList: true,
+      characterData: true
+    };
+    observer.observe(dialog, config);
+  }
+};
 
 LockApp = {
   chRt: chrome.runtime,
@@ -14,12 +40,18 @@ LockApp = {
     }, function(response) {
       if (response.reply === true) {
         LockApp.isLocked = true;
-        return LockApp.lockTab();
+        return LockApp.chSt.get(null, function(settings) {
+          if (settings.userMessage !== '' || settings.userMessage !== null || settings.userMessage.length > 0) {
+            return LockApp.lockTab(settings.userMessage);
+          } else {
+            return LockApp.lockTab();
+          }
+        });
       }
     });
   },
   lockTab: function(systemMessage) {
-    var body, clearFix, dialog, dialogTitle, errorLabel, form, formButton, hintLabel, hintLink, hintText, passwordInput, row_1, row_2;
+    var body, clearFix, dialog, dialogTitle, errorLabel, form, formButton, hintLabel, hintLink, hintText, message, passwordInput, row_1, row_2;
     if (systemMessage == null) {
       systemMessage = null;
     }
@@ -28,6 +60,8 @@ LockApp = {
     dialog.classList.add('sl-dialog');
     dialogTitle = document.createElement('h3');
     dialogTitle.textContent = 'YOUR BROWSER IS LOCKED';
+    message = document.createElement('h4');
+    message.textContent = systemMessage;
     form = document.createElement('form');
     passwordInput = document.createElement('input');
     formButton = document.createElement('button');
@@ -64,10 +98,12 @@ LockApp = {
     form.appendChild(errorLabel);
     form.appendChild(row_2);
     dialog.appendChild(dialogTitle);
+    dialog.appendChild(message);
     dialog.appendChild(form);
     body.appendChild(dialog);
     dialog.showModal();
-    return this.formFunction();
+    this.formFunction();
+    return Wtchr.init();
   },
   formFunction: function() {
     var form, hintLink, hintText, password;
@@ -124,7 +160,13 @@ document.addEventListener('keyup', function(e) {
 LockApp.chRt.onMessage.addListener(function(message, sender, response) {
   if (message.cmd === 'lock-everything' && LockApp.isLocked === false) {
     LockApp.isLocked = true;
-    LockApp.lockTab();
+    LockApp.chSt.get(null, function(settings) {
+      if (settings.userMessage !== '' || settings.userMessage === null || settings.userMessage.length > 0) {
+        return LockApp.lockTab(settings.userMessage);
+      } else {
+        return LockApp.lockTab();
+      }
+    });
   }
   if (message.cmd === 'unlock-attempt') {
     if (message.result === false) {

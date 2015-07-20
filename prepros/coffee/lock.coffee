@@ -1,3 +1,19 @@
+Wtchr = 
+    chSt: chrome.storage.sync
+    init: () ->
+        @chSt.get null, (settings) ->
+            if settings.persistent is 'on'
+                Wtchr.watch()
+    watch: () ->
+        dialog = document.querySelector '.sl-dialog'
+        observer = new MutationObserver (mutations) ->
+            mutations.forEach (mutation) ->
+                console.log mutation
+            return
+        config = {attributes: true, childList: true, characterData: true}
+        observer.observe dialog, config
+        return
+
 LockApp =
     chRt: chrome.runtime
     chSt: chrome.storage.sync
@@ -10,7 +26,11 @@ LockApp =
         @chRt.sendMessage {cmd: 'check-lock'}, (response) ->
             if response.reply is true
                 LockApp.isLocked = true
-                LockApp.lockTab()
+                LockApp.chSt.get null, (settings) ->
+                    if settings.userMessage isnt '' or settings.userMessage isnt null or settings.userMessage.length > 0
+                        LockApp.lockTab settings.userMessage
+                    else
+                        LockApp.lockTab()
         return
     lockTab: (systemMessage = null) ->
         body = document.querySelector 'body'
@@ -19,6 +39,9 @@ LockApp =
         # for dialog title form
         dialogTitle = document.createElement 'h3'
         dialogTitle.textContent = 'YOUR BROWSER IS LOCKED'
+        # system message
+        message = document.createElement 'h4'
+        message.textContent = systemMessage
         # form
         form = document.createElement 'form'
         passwordInput = document.createElement 'input'
@@ -60,10 +83,12 @@ LockApp =
         form.appendChild row_2
         # append the dialog on the body
         dialog.appendChild dialogTitle
+        dialog.appendChild message
         dialog.appendChild form
         body.appendChild dialog
         dialog.showModal()
         @formFunction()
+        Wtchr.init()
     formFunction: () ->
         form = document.querySelector '#slForm'
         password = document.querySelector 'input[type=password]'
@@ -106,7 +131,11 @@ document.addEventListener 'keyup', (e) ->
 LockApp.chRt.onMessage.addListener (message, sender, response) ->
     if message.cmd is 'lock-everything' and LockApp.isLocked is false
         LockApp.isLocked = true
-        LockApp.lockTab()
+        LockApp.chSt.get null, (settings) ->
+            if settings.userMessage isnt '' or settings.userMessage is null or settings.userMessage.length > 0
+                LockApp.lockTab settings.userMessage
+            else
+                LockApp.lockTab()
     if message.cmd is 'unlock-attempt'
         if message.result is false
             LockApp.checkAuth message.result

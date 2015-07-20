@@ -4,6 +4,8 @@ chSt = chrome.storage.sync
 password = null;
 isLocked = chSt.get null, (settings) ->
     return settings.isLocked
+userMessage = chSt.get null, (settings) ->
+    return settings.userMessage
 
 # this function dispatch a global trigger
 tabsCommander = (cmd, txt = null) ->

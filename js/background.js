@@ -1,4 +1,4 @@
-var chRt, chSt, chTb, isLocked, password, tabsCommander;
+var chRt, chSt, chTb, isLocked, password, tabsCommander, userMessage;
 
 chTb = chrome.tabs;
 
@@ -10,6 +10,10 @@ password = null;
 
 isLocked = chSt.get(null, function(settings) {
   return settings.isLocked;
+});
+
+userMessage = chSt.get(null, function(settings) {
+  return settings.userMessage;
 });
 
 tabsCommander = function(cmd, txt) {
