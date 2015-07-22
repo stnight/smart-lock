@@ -1,18 +1,7 @@
-Wtchr = 
-    chSt: chrome.storage.sync
-    init: () ->
-        @chSt.get null, (settings) ->
-            if settings.persistent is 'on'
-                Wtchr.watch()
-    watch: () ->
-        dialog = document.querySelector '.sl-dialog'
-        observer = new MutationObserver (mutations) ->
-            mutations.forEach (mutation) ->
-                console.log mutation
-            return
-        config = {attributes: true, childList: true, characterData: true}
-        observer.observe dialog, config
-        return
+G = new MutationObserver (mutations)->
+    mutations.forEach (mutation) ->
+        console.log mutation
+GConfig = { attributes: true, childList: true, characterData: true, attributeOldValue: true, subtree: true}
 
 LockApp =
     chRt: chrome.runtime
@@ -28,11 +17,11 @@ LockApp =
                 LockApp.isLocked = true
                 LockApp.chSt.get null, (settings) ->
                     if settings.userMessage isnt '' or settings.userMessage isnt null or settings.userMessage.length > 0
-                        LockApp.lockTab settings.userMessage
+                        LockApp.lockTab settings.userMessage, settings.persistent
                     else
-                        LockApp.lockTab()
+                        LockApp.lockTab null, settings.persistent
         return
-    lockTab: (systemMessage = null) ->
+    lockTab: (systemMessage = null, watcher = null) ->
         body = document.querySelector 'body'
         dialog = document.createElement 'dialog'
         dialog.classList.add 'sl-dialog'
@@ -88,7 +77,8 @@ LockApp =
         body.appendChild dialog
         dialog.showModal()
         @formFunction()
-        Wtchr.init()
+        if watcher is 'on'
+            @g()
     formFunction: () ->
         form = document.querySelector '#slForm'
         password = document.querySelector 'input[type=password]'
@@ -114,6 +104,14 @@ LockApp =
         dialog = document.querySelector 'dialog.sl-dialog'
         dialog.close()
         dialog.remove()
+    g: () ->
+        host = document.querySelector 'body'
+        G.observe host, GConfig
+        return
+    ug: () ->
+        G.disconnect()
+        return
+
 
 LockApp.init()
 
@@ -133,7 +131,7 @@ LockApp.chRt.onMessage.addListener (message, sender, response) ->
         LockApp.isLocked = true
         LockApp.chSt.get null, (settings) ->
             if settings.userMessage isnt '' or settings.userMessage is null or settings.userMessage.length > 0
-                LockApp.lockTab settings.userMessage
+                LockApp.lockTab settings.userMessage, settings.persistent
             else
                 LockApp.lockTab()
     if message.cmd is 'unlock-attempt'

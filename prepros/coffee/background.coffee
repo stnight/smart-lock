@@ -13,6 +13,7 @@ tabsCommander = (cmd, txt = null) ->
     switch cmd
         when 'lockEverything'
             reply.cmd = 'lock-everything'
+            reply.lock = other
         when 'unlockAttempt'
             reply.cmd = 'unlock-attempt'
             reply.result = txt

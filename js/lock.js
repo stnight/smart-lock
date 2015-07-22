@@ -1,29 +1,17 @@
-var LockApp, Wtchr;
+var G, GConfig, LockApp;
 
-Wtchr = {
-  chSt: chrome.storage.sync,
-  init: function() {
-    return this.chSt.get(null, function(settings) {
-      if (settings.persistent === 'on') {
-        return Wtchr.watch();
-      }
-    });
-  },
-  watch: function() {
-    var config, dialog, observer;
-    dialog = document.querySelector('.sl-dialog');
-    observer = new MutationObserver(function(mutations) {
-      mutations.forEach(function(mutation) {
-        return console.log(mutation);
-      });
-    });
-    config = {
-      attributes: true,
-      childList: true,
-      characterData: true
-    };
-    observer.observe(dialog, config);
-  }
+G = new MutationObserver(function(mutations) {
+  return mutations.forEach(function(mutation) {
+    return console.log(mutation);
+  });
+});
+
+GConfig = {
+  attributes: true,
+  childList: true,
+  characterData: true,
+  attributeOldValue: true,
+  subtree: true
 };
 
 LockApp = {
@@ -42,18 +30,21 @@ LockApp = {
         LockApp.isLocked = true;
         return LockApp.chSt.get(null, function(settings) {
           if (settings.userMessage !== '' || settings.userMessage !== null || settings.userMessage.length > 0) {
-            return LockApp.lockTab(settings.userMessage);
+            return LockApp.lockTab(settings.userMessage, settings.persistent);
           } else {
-            return LockApp.lockTab();
+            return LockApp.lockTab(null, settings.persistent);
           }
         });
       }
     });
   },
-  lockTab: function(systemMessage) {
+  lockTab: function(systemMessage, watcher) {
     var body, clearFix, dialog, dialogTitle, errorLabel, form, formButton, hintLabel, hintLink, hintText, message, passwordInput, row_1, row_2;
     if (systemMessage == null) {
       systemMessage = null;
+    }
+    if (watcher == null) {
+      watcher = null;
     }
     body = document.querySelector('body');
     dialog = document.createElement('dialog');
@@ -103,7 +94,9 @@ LockApp = {
     body.appendChild(dialog);
     dialog.showModal();
     this.formFunction();
-    return Wtchr.init();
+    if (watcher === 'on') {
+      return this.g();
+    }
   },
   formFunction: function() {
     var form, hintLink, hintText, password;
@@ -138,6 +131,14 @@ LockApp = {
     dialog = document.querySelector('dialog.sl-dialog');
     dialog.close();
     return dialog.remove();
+  },
+  g: function() {
+    var host;
+    host = document.querySelector('body');
+    G.observe(host, GConfig);
+  },
+  ug: function() {
+    G.disconnect();
   }
 };
 
@@ -162,7 +163,7 @@ LockApp.chRt.onMessage.addListener(function(message, sender, response) {
     LockApp.isLocked = true;
     LockApp.chSt.get(null, function(settings) {
       if (settings.userMessage !== '' || settings.userMessage === null || settings.userMessage.length > 0) {
-        return LockApp.lockTab(settings.userMessage);
+        return LockApp.lockTab(settings.userMessage, settings.persistent);
       } else {
         return LockApp.lockTab();
       }
