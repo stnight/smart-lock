@@ -1,6 +1,8 @@
 G = new MutationObserver (mutations)->
     mutations.forEach (mutation) ->
         console.log mutation
+    return
+
 GConfig =
     attributes: true
     childList: true
@@ -106,6 +108,7 @@ LockApp =
             errorLabel.textContent = 'Your Password Is Incorrect'
             return
     unlockTab: () ->
+        @isLocked = false
         dialog = document.querySelector 'dialog.sl-dialog'
         dialog.close()
         dialog.remove()
@@ -117,9 +120,11 @@ LockApp =
         G.disconnect()
         return
 
-
-LockApp.init()
-
+document.onreadystatechange = () ->
+    switch document.readyState
+        when 'interactive'
+            LockApp.init()
+        
 LockApp.chRt.onConnect.addListener (e) ->
     console.log 'someone is connected'
 
@@ -135,7 +140,7 @@ LockApp.chRt.onMessage.addListener (message, sender, response) ->
     if message.cmd is 'lock-everything' and LockApp.isLocked is false
         LockApp.isLocked = true
         LockApp.chSt.get null, (settings) ->
-            if settings.userMessage isnt '' or settings.userMessage is null or settings.userMessage.length > 0
+            if settings.userMessage isnt '' or settings.userMessage isnt null or settings.userMessage.length > 0
                 LockApp.lockTab settings.userMessage, settings.persistent
             else
                 LockApp.lockTab()

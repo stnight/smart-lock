@@ -25,7 +25,6 @@ tabsCommander = function(cmd, txt) {
   switch (cmd) {
     case 'lockEverything':
       reply.cmd = 'lock-everything';
-      reply.lock = other;
       break;
     case 'unlockAttempt':
       reply.cmd = 'unlock-attempt';

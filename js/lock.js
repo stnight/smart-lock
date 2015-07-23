@@ -1,7 +1,7 @@
 var G, GConfig, LockApp;
 
 G = new MutationObserver(function(mutations) {
-  return mutations.forEach(function(mutation) {
+  mutations.forEach(function(mutation) {
     return console.log(mutation);
   });
 });
@@ -128,6 +128,7 @@ LockApp = {
   },
   unlockTab: function() {
     var dialog;
+    this.isLocked = false;
     dialog = document.querySelector('dialog.sl-dialog');
     dialog.close();
     return dialog.remove();
@@ -142,7 +143,12 @@ LockApp = {
   }
 };
 
-LockApp.init();
+document.onreadystatechange = function() {
+  switch (document.readyState) {
+    case 'interactive':
+      return LockApp.init();
+  }
+};
 
 LockApp.chRt.onConnect.addListener(function(e) {
   return console.log('someone is connected');
@@ -162,7 +168,7 @@ LockApp.chRt.onMessage.addListener(function(message, sender, response) {
   if (message.cmd === 'lock-everything' && LockApp.isLocked === false) {
     LockApp.isLocked = true;
     LockApp.chSt.get(null, function(settings) {
-      if (settings.userMessage !== '' || settings.userMessage === null || settings.userMessage.length > 0) {
+      if (settings.userMessage !== '' || settings.userMessage !== null || settings.userMessage.length > 0) {
         return LockApp.lockTab(settings.userMessage, settings.persistent);
       } else {
         return LockApp.lockTab();
