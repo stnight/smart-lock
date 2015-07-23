@@ -1,7 +1,12 @@
 G = new MutationObserver (mutations)->
     mutations.forEach (mutation) ->
         console.log mutation
-GConfig = { attributes: true, childList: true, characterData: true, attributeOldValue: true, subtree: true}
+GConfig =
+    attributes: true
+    childList: true
+    characterData: true
+    attributeOldValue: true
+    subtree: true
 
 LockApp =
     chRt: chrome.runtime
