@@ -26,6 +26,9 @@ tabsCommander = function(cmd, txt) {
     case 'lockEverything':
       reply.cmd = 'lock-everything';
       break;
+    case 'noPassword':
+      reply.cmd = 'no-password';
+      break;
     case 'unlockAttempt':
       reply.cmd = 'unlock-attempt';
       reply.result = txt;
@@ -55,12 +58,14 @@ chRt.onMessage.addListener(function(request, sender, sendResponse) {
       });
     case 'lock-browser':
       chSt.get(null, function(settings) {
-        if (settings.password !== null) {
+        if (settings.password !== null && typeof settings.password !== 'undefined' && settings.password !== '') {
           chSt.set({
             isLocked: true
           }, function() {});
           isLocked = true;
           tabsCommander('lockEverything');
+        } else if (settings.password === '' || settings.password === null || typeof settings.password === 'undefined') {
+          return tabsCommander('noPassword');
         }
       });
       return sendResponse({

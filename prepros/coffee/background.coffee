@@ -13,6 +13,8 @@ tabsCommander = (cmd, txt = null) ->
     switch cmd
         when 'lockEverything'
             reply.cmd = 'lock-everything'
+        when 'noPassword'
+            reply.cmd = 'no-password'
         when 'unlockAttempt'
             reply.cmd = 'unlock-attempt'
             reply.result = txt
@@ -34,11 +36,13 @@ chRt.onMessage.addListener (request, sender, sendResponse) ->
             sendResponse {reply: isLocked}
         when 'lock-browser'
             chSt.get null, (settings) ->
-                if settings.password isnt null
+                if settings.password isnt null and typeof settings.password isnt 'undefined' and settings.password isnt ''
                     chSt.set {isLocked: true}, () ->
                     isLocked = true
                     tabsCommander 'lockEverything'
                     return
+                else if settings.password is '' or settings.password is null or typeof settings.password is 'undefined'
+                    tabsCommander 'noPassword'
             sendResponse {reply:'done with the commands'}
         when 'validate-password'
             chSt.get null, (settings) ->

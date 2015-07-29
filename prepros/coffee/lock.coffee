@@ -28,6 +28,25 @@ LockApp =
                     else
                         LockApp.lockTab null, settings.persistent
         return
+    noPassword: () ->
+        body = document.querySelector 'body'
+        dialog = document.createElement 'dialog'
+        dialog.classList.add 'sl-dialog', 'no-pass'
+        # for dialog title form
+        dialogTitle = document.createElement 'h3'
+        dialogTitle.textContent = 'PLEASE PROVIDE A PASSWORD'
+        # form
+        form = document.createElement 'form'
+        form.setAttribute 'id', 'slForm'
+        # button
+        formButton = document.createElement 'button'
+        formButton.textContent = 'OKAY'
+        # append
+        form.appendChild formButton
+        dialog.appendChild dialogTitle
+        dialog.appendChild form
+        body.appendChild dialog
+        dialog.showModal()
     lockTab: (systemMessage = null, watcher = null) ->
         body = document.querySelector 'body'
         dialog = document.createElement 'dialog'
@@ -149,3 +168,5 @@ LockApp.chRt.onMessage.addListener (message, sender, response) ->
             LockApp.checkAuth message.result
         else
             LockApp.unlockTab()
+    if message.cmd is 'no-password'
+        LockApp.noPassword()

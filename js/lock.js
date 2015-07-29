@@ -38,6 +38,23 @@ LockApp = {
       }
     });
   },
+  noPassword: function() {
+    var body, dialog, dialogTitle, form, formButton;
+    body = document.querySelector('body');
+    dialog = document.createElement('dialog');
+    dialog.classList.add('sl-dialog', 'no-pass');
+    dialogTitle = document.createElement('h3');
+    dialogTitle.textContent = 'PLEASE PROVIDE A PASSWORD';
+    form = document.createElement('form');
+    form.setAttribute('id', 'slForm');
+    formButton = document.createElement('button');
+    formButton.textContent = 'OKAY';
+    form.appendChild(formButton);
+    dialog.appendChild(dialogTitle);
+    dialog.appendChild(form);
+    body.appendChild(dialog);
+    return dialog.showModal();
+  },
   lockTab: function(systemMessage, watcher) {
     var body, clearFix, dialog, dialogTitle, errorLabel, form, formButton, hintLabel, hintLink, hintText, message, passwordInput, row_1, row_2;
     if (systemMessage == null) {
@@ -177,9 +194,12 @@ LockApp.chRt.onMessage.addListener(function(message, sender, response) {
   }
   if (message.cmd === 'unlock-attempt') {
     if (message.result === false) {
-      return LockApp.checkAuth(message.result);
+      LockApp.checkAuth(message.result);
     } else {
-      return LockApp.unlockTab();
+      LockApp.unlockTab();
     }
+  }
+  if (message.cmd === 'no-password') {
+    return LockApp.noPassword();
   }
 });
