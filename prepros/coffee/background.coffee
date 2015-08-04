@@ -18,6 +18,8 @@ tabsCommander = (cmd, txt = null) ->
         when 'unlockAttempt'
             reply.cmd = 'unlock-attempt'
             reply.result = txt
+        when 'unlockAll'
+            reply.cmd = 'unlock-all'
     chTb.query {}, (tabs) ->
         tabs.forEach (tab) ->
             chTb.connect tab.id
@@ -43,6 +45,7 @@ chRt.onMessage.addListener (request, sender, sendResponse) ->
                     return
                 else if settings.password is '' or settings.password is null or typeof settings.password is 'undefined'
                     tabsCommander 'noPassword'
+                    return
             sendResponse {reply:'done with the commands'}
         when 'validate-password'
             chSt.get null, (settings) ->
@@ -53,10 +56,10 @@ chRt.onMessage.addListener (request, sender, sendResponse) ->
                 else
                     tabsCommander 'unlockAttempt', false
                 return
-            return
+        when 'all-no-password'
+            tabsCommander 'unlockAll'
 
 chrome.storage.onChanged.addListener (changes, areaName) ->
-    console.log changes
     isLocked = chSt.get null, (settings) ->
-        return settings.isLocked
-    return
+        settings.isLocked
+        return

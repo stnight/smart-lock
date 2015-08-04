@@ -18,6 +18,7 @@ LockApp = {
   chRt: chrome.runtime,
   chSt: chrome.storage.sync,
   isLocked: false,
+  isDialogOpened: false,
   hint: null,
   init: function() {
     this.chSt.get(null, function(settings) {
@@ -48,12 +49,27 @@ LockApp = {
     form = document.createElement('form');
     form.setAttribute('id', 'slForm');
     formButton = document.createElement('button');
+    formButton.setAttribute('id', 'closeDialog');
     formButton.textContent = 'OKAY';
     form.appendChild(formButton);
     dialog.appendChild(dialogTitle);
     dialog.appendChild(form);
     body.appendChild(dialog);
-    return dialog.showModal();
+    dialog.showModal();
+    return this.noPwdFunction();
+  },
+  noPwdFunction: function() {
+    var dialog, form;
+    dialog = document.querySelector('dialog.sl-dialog');
+    form = document.querySelector('.sl-dialog form');
+    return form.addEventListener('submit', function(event) {
+      event.preventDefault();
+      return LockApp.chRt.sendMessage({
+        cmd: 'all-no-password'
+      }, function(response) {
+        return true;
+      });
+    });
   },
   lockTab: function(systemMessage, watcher) {
     var body, clearFix, dialog, dialogTitle, errorLabel, form, formButton, hintLabel, hintLink, hintText, message, passwordInput, row_1, row_2;
@@ -146,6 +162,7 @@ LockApp = {
   unlockTab: function() {
     var dialog;
     this.isLocked = false;
+    this.isDialogOpened = true;
     dialog = document.querySelector('dialog.sl-dialog');
     dialog.close();
     return dialog.remove();
@@ -172,7 +189,8 @@ LockApp.chRt.onConnect.addListener(function(e) {
 });
 
 document.addEventListener('keyup', function(e) {
-  if (e.ctrlKey && e.keyCode === 81) {
+  if (e.ctrlKey && e.keyCode === 81 && LockApp.isDialogOpened === false) {
+    LockApp.isDialogOpened = true;
     return LockApp.chRt.sendMessage({
       cmd: 'lock-browser'
     }, function(response) {
@@ -200,6 +218,9 @@ LockApp.chRt.onMessage.addListener(function(message, sender, response) {
     }
   }
   if (message.cmd === 'no-password') {
-    return LockApp.noPassword();
+    LockApp.noPassword();
+  }
+  if (message.cmd === 'unlock-all') {
+    return LockApp.unlockTab();
   }
 });

@@ -76,6 +76,14 @@ hr {
     width: 20%
 }
 
+.thirty {
+    width: 30%;
+}
+
+.seventy {
+    width: 70%;
+}
+
 .eighty {
     width: 80%
 }
@@ -95,7 +103,8 @@ hr {
     font-weight: bold;
 }
 
-input[type='text'] {
+input[type='text'],
+input[type='password'] {
     padding: 10px;
     box-sizing : border-box;
     border: 1px solid tomato;
@@ -125,7 +134,7 @@ input[type='text'] {
     }
 }
 
-#basic, #forgot {
+#basic, #change, #forgot {
     padding-left: 10px;
 }
 

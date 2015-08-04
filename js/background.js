@@ -32,6 +32,9 @@ tabsCommander = function(cmd, txt) {
     case 'unlockAttempt':
       reply.cmd = 'unlock-attempt';
       reply.result = txt;
+      break;
+    case 'unlockAll':
+      reply.cmd = 'unlock-all';
   }
   return chTb.query({}, function(tabs) {
     tabs.forEach(function(tab) {
@@ -65,14 +68,14 @@ chRt.onMessage.addListener(function(request, sender, sendResponse) {
           isLocked = true;
           tabsCommander('lockEverything');
         } else if (settings.password === '' || settings.password === null || typeof settings.password === 'undefined') {
-          return tabsCommander('noPassword');
+          tabsCommander('noPassword');
         }
       });
       return sendResponse({
         reply: 'done with the commands'
       });
     case 'validate-password':
-      chSt.get(null, function(settings) {
+      return chSt.get(null, function(settings) {
         if (request.password === settings.password) {
           tabsCommander('unlockAttempt', true);
           isLocked = false;
@@ -83,12 +86,13 @@ chRt.onMessage.addListener(function(request, sender, sendResponse) {
           tabsCommander('unlockAttempt', false);
         }
       });
+    case 'all-no-password':
+      return tabsCommander('unlockAll');
   }
 });
 
 chrome.storage.onChanged.addListener(function(changes, areaName) {
-  console.log(changes);
-  isLocked = chSt.get(null, function(settings) {
-    return settings.isLocked;
+  return isLocked = chSt.get(null, function(settings) {
+    settings.isLocked;
   });
 });

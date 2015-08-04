@@ -13,8 +13,9 @@
         <!-- navigation -->
         <div class="sidebar column twenty">
             <ul class="navigation">
-                <li class="active" id="nav_basic"><a href="#">Basic</a></li>
-                <li id="nav_forgot"><a href="#">Forgot Password</a></li>
+                <li class="active" id="nav_basic" data-content="#basic"><a href="#">Basic</a></li>
+                <li id="nav_change" data-content="#change"><a href="#">Change Password</a></li>
+                <li id="nav_forgot" data-content="#forgot"><a href="#">Forgot Password</a></li>
             </ul>
         </div>
         <!-- content -->
@@ -54,9 +55,43 @@
                     </div>
                 </div>
             </div>
+            <!-- for changing password -->
+            <div id="change" class="settings-content hide">
+                <h2 class="title">CHANGE YOUR PASSWORD</h2>
+                <div class="row">
+                    <div class="column twenty settings-label">
+                        Current Password:
+                    </div>
+                    <input type="password" id="currentPassword" class="column eighty" placeholder="Your Current Password">
+                    <div class="clear"></div>
+                </div>
+                <div class="row">
+                    <div class="column twenty settings-label">
+                        New Password:
+                    </div>
+                    <input type="password" id="newPassword" class="column eighty" placeholder="Your New Password
+                    ">
+                    <div class="clear"></div>
+                </div>
+                <div class="row">
+                    <div class="column twenty settings-label">
+                        Retype Password:
+                    </div>
+                    <input type="password" id="retypePassword" class="column eighty" placeholder="Type Your New Password Again">
+                    <div class="clear"></div>
+                </div>
+                <div class="row">
+                    <div class="column twenty">
+                        <button id="updatePasswordButton">SAVE</button>
+                    </div>
+                    <div class="column eighty settings-label">
+                        <label for="" id="updatePasswordMessage" class="mainLabel"></label>
+                    </div>
+                </div>
+            </div>
             <!-- for forgot password -->
             <div id="forgot" class="settings-content hide">
-                <h2 class="title">RECOVER PASSWORD</h2>
+                <h2 class="title">RECOVER YOUR PASSWORD</h2>
                 <p>
                     This section will help you to recover your lost password.
                 </p>

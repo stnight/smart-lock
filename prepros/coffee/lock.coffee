@@ -14,6 +14,7 @@ LockApp =
     chRt: chrome.runtime
     chSt: chrome.storage.sync
     isLocked: false
+    isDialogOpened: false
     hint: null
     init: () ->
         @chSt.get null, (settings) ->
@@ -40,6 +41,7 @@ LockApp =
         form.setAttribute 'id', 'slForm'
         # button
         formButton = document.createElement 'button'
+        formButton.setAttribute 'id', 'closeDialog'
         formButton.textContent = 'OKAY'
         # append
         form.appendChild formButton
@@ -47,6 +49,14 @@ LockApp =
         dialog.appendChild form
         body.appendChild dialog
         dialog.showModal()
+        @noPwdFunction()
+    noPwdFunction: () ->
+        dialog = document.querySelector 'dialog.sl-dialog'
+        form = document.querySelector '.sl-dialog form'
+        form.addEventListener 'submit', (event) ->
+            event.preventDefault()
+            LockApp.chRt.sendMessage {cmd: 'all-no-password'}, (response) ->
+                return true
     lockTab: (systemMessage = null, watcher = null) ->
         body = document.querySelector 'body'
         dialog = document.createElement 'dialog'
@@ -128,6 +138,7 @@ LockApp =
             return
     unlockTab: () ->
         @isLocked = false
+        @isDialogOpened = true
         dialog = document.querySelector 'dialog.sl-dialog'
         dialog.close()
         dialog.remove()
@@ -149,7 +160,8 @@ LockApp.chRt.onConnect.addListener (e) ->
 
 # when ctrl + q is being pressed
 document.addEventListener 'keyup', (e) ->
-        if e.ctrlKey and e.keyCode is 81
+        if e.ctrlKey and e.keyCode is 81 and LockApp.isDialogOpened is false
+            LockApp.isDialogOpened = true
             LockApp.chRt.sendMessage {cmd: 'lock-browser'}, (response) ->
                console.log true
     , false
@@ -170,3 +182,5 @@ LockApp.chRt.onMessage.addListener (message, sender, response) ->
             LockApp.unlockTab()
     if message.cmd is 'no-password'
         LockApp.noPassword()
+    if message.cmd is 'unlock-all'
+        LockApp.unlockTab()

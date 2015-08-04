@@ -1,53 +1,59 @@
-var basicNav, chSt, forgotNav, persistent, saveButton, toggleActive, toggleContent;
+var chRt, chSt, link, linksLi, persistent, pwdButton, saveButton, toggleActive, toggleContent, _i, _len;
 
 chSt = chrome.storage.sync;
+
+chRt = chrome.runtime;
 
 chSt.get(null, function(settings) {
   var messageSetting, persistentSetting;
   messageSetting = document.querySelector('#messageSetting');
   persistentSetting = document.querySelector('#persistentSetting');
-  messageSetting.value = settings.userMessage;
+  messageSetting.value = settings.userMessage !== null && typeof settings.userMessage !== 'undefined' ? settings.userMessage : '';
   if (settings.persistent === 'on') {
     return persistentSetting.setAttribute('checked', 'checked');
   }
 });
 
-basicNav = document.querySelector('#nav_basic');
-
-forgotNav = document.querySelector('#nav_forgot');
-
-toggleActive = function() {
+toggleActive = function(toActive) {
   [].forEach.call(document.querySelectorAll('.navigation li'), function(li) {
-    li.classList.toggle('active');
+    if (li.classList.contains('active')) {
+      return li.classList.toggle('active');
+    }
   });
+  document.querySelector(toActive).classList.toggle('active');
 };
 
-toggleContent = function() {
+toggleContent = function(toActive) {
   [].forEach.call(document.querySelectorAll('.settings-content'), function(content) {
-    content.classList.toggle('hide');
+    if (content.classList.contains('hide') === false) {
+      console.log('yes');
+      return content.classList.add('hide');
+    }
   });
+  document.querySelector(toActive).classList.toggle('hide');
 };
 
-basicNav.addEventListener('click', function(e) {
-  e.preventDefault();
-  console.log(this);
-  if (this.classList.contains('active') === false) {
-    toggleActive();
-    return toggleContent();
-  }
-});
+linksLi = document.querySelectorAll('.navigation li');
 
-forgotNav.addEventListener('click', function(e) {
-  e.preventDefault();
-  if (this.classList.contains('active') === false) {
-    toggleActive();
-    return toggleContent();
-  }
-});
+for (_i = 0, _len = linksLi.length; _i < _len; _i++) {
+  link = linksLi[_i];
+  link.addEventListener('click', function() {
+    var content, isActive, liId;
+    content = this.dataset.content;
+    isActive = this.classList.contains('active');
+    liId = '#' + this.id;
+    if (isActive === false) {
+      toggleActive(liId);
+      toggleContent(content);
+    }
+  });
+}
 
 persistent = document.querySelector('#persistentSetting');
 
 saveButton = document.querySelector('#saveButton');
+
+pwdButton = document.querySelector('#updatePasswordButton');
 
 persistent.addEventListener('click', function() {
   if (this.checked) {
@@ -72,4 +78,25 @@ saveButton.addEventListener('click', function(e) {
       return updateMessage.textContent = '';
     }, 2500);
   });
+});
+
+pwdButton.addEventListener('click', function(e) {
+  var currentPass, newPass, passMessage, rePass;
+  passMessage = document.querySelector('#updatePasswordMessage');
+  currentPass = document.querySelector('#currentPassword');
+  newPass = document.querySelector('#newPassword');
+  rePass = document.querySelector('#retypePassword');
+  if (newPassword.value !== rePass.value) {
+    passMessage.textContent = 'Password Mismatched, Please Retype Your Password.';
+    return setTimeout(function() {
+      return passMessage.textContent = '';
+    }, 2500);
+  } else {
+    return chRt.sendMessage({
+      cmd: 'compair-password',
+      newPass: newPass.value
+    }, function(reponse) {
+      return console.log(response);
+    });
+  }
 });
