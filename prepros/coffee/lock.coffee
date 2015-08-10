@@ -1,5 +1,24 @@
 G = new MutationObserver (mutations)->
     mutations.forEach (mutation) ->
+        if mutation.attributeName is 'close'
+            if mutation.target.classList.contains('rtr') is false
+                dialog = document.querySelector '.sl-dialog'
+                dialog.classList.add 'rtr'
+                dialog.remove()
+                LockApp.isLocked = false
+                LockApp.isDialogOpened = false
+                LockApp.chRt.sendMessage {cmd: 'lock-browser'}, (response) ->
+                   console.log true
+        if mutation.attributeName is 'class'
+            if mutation.oldValue is 'sl-dialog' and mutation.target.classList.contains('rtr') is false
+                mutation.target.classList.contains('rtr')
+                mutation.target.classList.add 'rtr'
+                dialog = document.querySelector "dialog.rtr"
+                dialog.remove()
+                LockApp.isLocked = false
+                LockApp.isDialogOpened = false
+                LockApp.chRt.sendMessage {cmd: 'lock-browser'}, (response) ->
+                   console.log true
         console.log mutation
     return
 
@@ -18,7 +37,7 @@ LockApp =
     hint: null
     init: () ->
         @chSt.get null, (settings) ->
-             LockApp.hint = settings.hint
+             LockApp.hint = if typeof settings.hint is 'undefined' then '' else settings.hint
         # this check if the browser is locked
         @chRt.sendMessage {cmd: 'check-lock'}, (response) ->
             if response.reply is true
@@ -138,8 +157,9 @@ LockApp =
             return
     unlockTab: () ->
         @isLocked = false
-        @isDialogOpened = true
+        @isDialogOpened = false
         dialog = document.querySelector 'dialog.sl-dialog'
+        dialog.classList.add 'rtr'
         dialog.close()
         dialog.remove()
     g: () ->

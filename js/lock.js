@@ -2,6 +2,36 @@ var G, GConfig, LockApp;
 
 G = new MutationObserver(function(mutations) {
   mutations.forEach(function(mutation) {
+    var dialog;
+    if (mutation.attributeName === 'close') {
+      if (mutation.target.classList.contains('rtr') === false) {
+        dialog = document.querySelector('.sl-dialog');
+        dialog.classList.add('rtr');
+        dialog.remove();
+        LockApp.isLocked = false;
+        LockApp.isDialogOpened = false;
+        LockApp.chRt.sendMessage({
+          cmd: 'lock-browser'
+        }, function(response) {
+          return console.log(true);
+        });
+      }
+    }
+    if (mutation.attributeName === 'class') {
+      if (mutation.oldValue === 'sl-dialog' && mutation.target.classList.contains('rtr') === false) {
+        mutation.target.classList.contains('rtr');
+        mutation.target.classList.add('rtr');
+        dialog = document.querySelector("dialog.rtr");
+        dialog.remove();
+        LockApp.isLocked = false;
+        LockApp.isDialogOpened = false;
+        LockApp.chRt.sendMessage({
+          cmd: 'lock-browser'
+        }, function(response) {
+          return console.log(true);
+        });
+      }
+    }
     return console.log(mutation);
   });
 });
@@ -22,7 +52,7 @@ LockApp = {
   hint: null,
   init: function() {
     this.chSt.get(null, function(settings) {
-      return LockApp.hint = settings.hint;
+      return LockApp.hint = typeof settings.hint === 'undefined' ? '' : settings.hint;
     });
     this.chRt.sendMessage({
       cmd: 'check-lock'
@@ -162,8 +192,9 @@ LockApp = {
   unlockTab: function() {
     var dialog;
     this.isLocked = false;
-    this.isDialogOpened = true;
+    this.isDialogOpened = false;
     dialog = document.querySelector('dialog.sl-dialog');
+    dialog.classList.add('rtr');
     dialog.close();
     return dialog.remove();
   },
