@@ -1,16 +1,23 @@
-var chRt, chSt, link, linksLi, persistent, pwdButton, saveButton, toggleActive, toggleContent, _i, _len;
+var chRt, chSt, gPassButton, link, linksLi, persistent, pwdButton, saveButton, toggleActive, toggleContent, _i, _len;
 
 chSt = chrome.storage.sync;
 
 chRt = chrome.runtime;
 
 chSt.get(null, function(settings) {
-  var messageSetting, persistentSetting;
-  messageSetting = document.querySelector('#messageSetting');
-  persistentSetting = document.querySelector('#persistentSetting');
-  messageSetting.value = settings.userMessage !== null && typeof settings.userMessage !== 'undefined' ? settings.userMessage : '';
-  if (settings.persistent === 'on') {
-    return persistentSetting.setAttribute('checked', 'checked');
+  var messageSetting, noSet, persistentSetting, withSet;
+  noSet = document.querySelector('#noSettings');
+  withSet = document.querySelector('#withSettings');
+  if (settings.hasOwnProperty('password')) {
+    withSet.classList.toggle('hide');
+    messageSetting = document.querySelector('#messageSetting');
+    persistentSetting = document.querySelector('#persistentSetting');
+    messageSetting.value = settings.userMessage !== null && typeof settings.userMessage !== 'undefined' ? settings.userMessage : '';
+    if (settings.persistent === 'on') {
+      return persistentSetting.setAttribute('checked', 'checked');
+    }
+  } else {
+    return noSet.classList.toggle('hide');
   }
 });
 
@@ -55,6 +62,8 @@ saveButton = document.querySelector('#saveButton');
 
 pwdButton = document.querySelector('#updatePasswordButton');
 
+gPassButton = document.querySelector('#gPasswordButton');
+
 persistent.addEventListener('click', function() {
   if (this.checked) {
     return this.value = 'on';
@@ -92,11 +101,53 @@ pwdButton.addEventListener('click', function(e) {
       return passMessage.textContent = '';
     }, 2500);
   } else {
-    return chRt.sendMessage({
-      cmd: 'compair-password',
-      newPass: newPass.value
-    }, function(reponse) {
-      return console.log(response);
+    return chSt.get(null, function(settings) {
+      if (settings.password !== newPass.value) {
+        passMessage.textContent = 'Incorrect Password.';
+        return setTimeout(function() {
+          return passMessage.textContent = '';
+        }, 2500);
+      } else {
+        return chSt.set({
+          password: newPassword.value
+        }, function() {
+          passMessage.textContent = 'Password Updated';
+          currentPassword.value = '';
+          newPassword.value = '';
+          rePass.value = '';
+          return setTimeout(function() {
+            return passMessage.textContent = '';
+          }, 2500);
+        });
+      }
+    });
+  }
+});
+
+gPassButton.addEventListener('click', function(e) {
+  var gPassMessage, newPass, rePass;
+  newPass = document.querySelector('#gNewPass');
+  rePass = document.querySelector('#gRePass');
+  gPassMessage = document.querySelector('#gPasswordMessage');
+  if (newPass.value !== rePass.value) {
+    gPassMessage.textContent = 'Password Mismatched, Please Retype Your Password.';
+    return setTimeout(function() {
+      return gPassMessage.textContent = '';
+    }, 2500);
+  } else if (newPass.value.length === 0 || rePass.value.length === 0) {
+    gPassMessage.textContent = 'All Fields Are Required.';
+    return setTimeout(function() {
+      return gPassMessage.textContent = '';
+    }, 2500);
+  } else {
+    return chSt.set({
+      password: newPass.value
+    }, function() {
+      var noSet, withSet;
+      noSet = document.querySelector('#noSettings');
+      withSet = document.querySelector('#withSettings');
+      noSet.classList.toggle('hide');
+      return withSet.classList.toggle('hide');
     });
   }
 });

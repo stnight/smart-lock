@@ -134,7 +134,7 @@ input[type='password'] {
     }
 }
 
-#basic, #change, #forgot {
+#basic, #change, #forgot, #start {
     padding-left: 10px;
 }
 
@@ -190,4 +190,12 @@ input[type='password'] {
 
 .hide {
     display: none;
+}
+
+.tomato {
+    color: tomato;
+}
+
+.startingmessage {
+    font-size: 14px;
 }

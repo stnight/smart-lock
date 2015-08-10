@@ -9,7 +9,45 @@
 <body>
     <h1 class="title">SETTINGS</h1>
     <hr>
-    <div class="options-content">
+    <div class="options-content hide" id="noSettings">
+        <!-- navigation -->
+        <div class="sidebar column twenty">
+            <ul class="navigation">
+                <li class="active"><a href="#">Getting Started</a></li>
+            </ul>
+        </div>
+        <div class="content column eighty">
+            <div class="settings-content" id="start">
+                <div class="row">
+                    <p class="startingmessage">To get started with the <b class="tomato">Smart Lock</b> - please provide a password first.</p>
+                </div>
+                <div class="row">
+                    <div class="column twenty settings-label">
+                        New Password:
+                    </div>
+                    <input type="password" class="column eighty" id="gNewPass">
+                    <div class="clear"></div>
+                </div>
+                <div class="row">
+                    <div class="column twenty settings-label">
+                        Retype Password:
+                    </div>
+                    <input type="password" class="column eighty" id="gRePass">
+                    <div class="clear"></div>
+                </div>
+                <div class="row">
+                    <div class="column twenty">
+                        <button id="gPasswordButton">SAVE</button>
+                    </div>
+                    <div class="column eighty settings-label">
+                        <label for="" id="gPasswordMessage" class="mainLabel"></label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="clear"></div>
+    </div>
+    <div class="options-content hide" id="withSettings">
         <!-- navigation -->
         <div class="sidebar column twenty">
             <ul class="navigation">
