@@ -5,21 +5,23 @@ G = new MutationObserver (mutations)->
                 dialog = document.querySelector '.sl-dialog'
                 dialog.classList.add 'rtr'
                 dialog.remove()
-                LockApp.isLocked = false
-                LockApp.isDialogOpened = false
-                LockApp.chRt.sendMessage {cmd: 'lock-browser'}, (response) ->
-                   console.log true
+                LockApp.reLock()
+        if mutation.attributeName isnt null and mutation.target.offsetParent is null and mutation.attributeName isnt 'close' and mutation.attributeName isnt 'class' and mutation.attributeName isnt 'open'
+            if mutation.target.classList.contains('rtr') is false
+                dialog = document.querySelector '.sl-dialog'
+                dialog.classList.add 'rtr'
+                dialog.remove()
+                LockApp.reLock()
         if mutation.attributeName is 'class'
             if mutation.oldValue is 'sl-dialog' and mutation.target.classList.contains('rtr') is false
                 mutation.target.classList.contains('rtr')
                 mutation.target.classList.add 'rtr'
                 dialog = document.querySelector "dialog.rtr"
                 dialog.remove()
-                LockApp.isLocked = false
-                LockApp.isDialogOpened = false
-                LockApp.chRt.sendMessage {cmd: 'lock-browser'}, (response) ->
-                   console.log true
-        console.log mutation
+                LockApp.reLock()
+        if mutation.removedNodes.length isnt 0
+            if mutation.removedNodes[0].className is 'sl-dialog'
+                LockApp.reLock()
     return
 
 GConfig =
@@ -162,6 +164,11 @@ LockApp =
         dialog.classList.add 'rtr'
         dialog.close()
         dialog.remove()
+    reLock: () ->
+        @isLocked = false
+        @isDialogOpened = false
+        @chRt.sendMessage {cmd: 'lock-browser'}, (response) ->
+           return true
     g: () ->
         host = document.querySelector 'body'
         G.observe host, GConfig
@@ -176,14 +183,14 @@ document.onreadystatechange = () ->
             LockApp.init()
         
 LockApp.chRt.onConnect.addListener (e) ->
-    console.log 'someone is connected'
+    return true
 
 # when ctrl + q is being pressed
 document.addEventListener 'keyup', (e) ->
         if e.ctrlKey and e.keyCode is 81 and LockApp.isDialogOpened is false
             LockApp.isDialogOpened = true
             LockApp.chRt.sendMessage {cmd: 'lock-browser'}, (response) ->
-               console.log true
+               return true
     , false
 
 # when there is a command from background
