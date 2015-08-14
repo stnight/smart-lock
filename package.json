@@ -1,0 +1,42 @@
+{
+  "name": "smart-lock",
+  "version": "0.0.0",
+  "description": "PLugin for chrome to lock your tabs",
+  "main": "gulpfile.js",
+  "dependencies": {
+    "gulp": "~3.9.0",
+    "gulp-coffee": "~2.3.1",
+    "gulp-concat": "~2.6.0",
+    "gulp-minify-css": "~1.2.0",
+    "gulp-sass": "~2.0.4",
+    "gulp-uglify": "~1.2.0",
+    "gulp-util": "~3.0.6"
+  },
+  "devDependencies": {
+    "gulp-concat": "~2.6.0",
+    "gulp-minify-css": "~1.2.0",
+    "gulp-coffee": "~2.3.1",
+    "gulp-uglify": "~1.2.0",
+    "gulp": "~3.9.0",
+    "gulp-util": "~3.0.6",
+    "gulp-sass": "~2.0.4"
+  },
+  "scripts": {
+    "test": "gulp"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/stnight/smart-lock.git"
+  },
+  "keywords": [
+    "JS",
+    "HTML5",
+    "Chrome",
+    "Plugins"
+  ],
+  "author": "John Eric Orolfo",
+  "license": "BSD-2-Clause",
+  "bugs": {
+    "url": "https://github.com/stnight/smart-lock/issues"
+  }
+}
